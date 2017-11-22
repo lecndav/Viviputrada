@@ -1,0 +1,100 @@
+{
+  "options": {
+    "server": {
+      "root": "dist",
+      "basePort": 8000
+    },
+    "clean": [
+      "dist/**/*"
+    ],
+    "copy": [
+      {
+        "src": [
+          "src/views/**/*"
+        ],
+        "dest": "dist/"
+      }
+    ],
+    "babel": {
+      "entry": "src/assets/js/index.js",
+      "dest": "dist/js/",
+      "destFile": "index.js"
+    },
+    "images": {
+      "src": "src/assets/img/**/*",
+      "dest": "dist/img",
+      "quality": {
+        "optimizationLevel": 7,
+        "progressive": true,
+        "interlaced": true
+      }
+    },
+    "scss": {
+      "entry": [
+        "src/assets/scss/index.scss"
+      ],
+      "dest": "dist/css",
+      "browsers" : [
+        "ie >= 9",
+        "ie_mob >= 10",
+        "ff >= 30",
+        "chrome >= 34",
+        "safari >= 7",
+        "opera >= 23",
+        "ios >= 7",
+        "android >= 4.4",
+        "bb >= 10"
+      ]
+    },
+    "doc": {
+      "src": "src/assets/js",
+      "dest": "docs"
+    }
+  },
+  "build": {
+    "prerequisites": [
+      "clean"
+    ],
+    "run": [
+      "copy",
+      "buildES6",
+      "images",
+      "scss",
+      "build-doc"
+    ]
+  },
+  "watch": {
+    "prerequisites": [
+      "clean"
+    ],
+    "start": [
+      "watchES6"
+    ],
+    "watch": [
+      {
+        "files": [
+          "src/views/**/*"
+        ],
+        "tasks": [
+          "copy"
+        ]
+      },
+      {
+        "files": [
+          "src/assets/img/**/*"
+        ],
+        "tasks": [
+          "images"
+        ]
+      },
+      {
+        "files": [
+          "src/assets/scss/**/*"
+        ],
+        "tasks": [
+          "scss"
+        ]
+      }
+    ]
+  }
+}
