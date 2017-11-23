@@ -1,17 +1,6 @@
-# Gulp Project Setup
+# Open LED Board Project
 
-The files in this repo are intended to give you a simpler, more flexible framework for the Project, than the webpack environment, used in the AK.
-
-## Introduction
-The structure of the project source is the same as in the AK.
-
-Differences:
-- all files in `src/views` are copied to the `dist` folder
-- images from `src/assets/img` are optimized and saved in `dist/img`
-- the css and js files have to be included in the html template (see the example in `src/views/index.html`)
-
-The files are compiled and transferred to the `dist` folder using gulp (https://gulpjs.com/). 
-The gulp setup is located in the `gulpfile.js` folder. All configuration can be done in `gulpfile.js/config.js`.
+This is the repo for the first Open LED Board development.
 
 ## Install
 Install gulp globally ...
