@@ -1,6 +1,5 @@
-# Open LED Board Project
-
-This is the repo for the first Open LED Board development.
+# Viviputrada
+# Visualizing Vienna's Public Transport Data
 
 ## Install
 Install gulp globally ...
