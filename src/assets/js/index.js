@@ -16,6 +16,7 @@ const mapboxBearingSnap = 7; // The threshold, measured in degrees, that determi
 
 /** Mapbox Setup   
  *
+ *
  */
 mapboxgl.accessToken = 'pk.eyJ1IjoibWR1bmtlbCIsImEiOiJjamFiM3Yxem8wbmswMzNxdHhoa2w1aWVpIn0.67dORj80QYe7k9CoQg-Fmw';
 var map = new mapboxgl.Map({
