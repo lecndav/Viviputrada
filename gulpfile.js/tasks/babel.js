@@ -11,6 +11,7 @@ const browserify = require('browserify');
 const watchify = require('watchify');
 const babel = require('babelify');
 const babelSpecs = require('../config.json').options.babel;
+const gutil = require('gulp-util');
 
 function compile(watch) {
   let bundler = browserify(
@@ -33,7 +34,9 @@ function compile(watch) {
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(babelSpecs.dest));
+      .pipe(gulp.dest(babelSpecs.dest))
+      .on('end', function(){ gutil.log('finished bundling ...'); });
+
   }
 
   if (watch) {
@@ -41,7 +44,6 @@ function compile(watch) {
     bundler.on('update', function() {
       console.log('-> bundling ...');
       rebundle();
-      console.log('... finished');
     });
   }
 
