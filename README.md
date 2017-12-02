@@ -1,5 +1,4 @@
-# Viviputrada
-# Visualizing Vienna's Public Transport Data
+# Viviputrada - Visualizing Vienna's Public Transport Data
 
 ## Install
 Install gulp globally ...
