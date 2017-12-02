@@ -1,5 +1,5 @@
 /** @file This is the entry file
- * @version 0.1
+ * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 
