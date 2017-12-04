@@ -5,37 +5,21 @@
 
 import mapboxgl from 'mapbox-gl'
 import turf from '@turf/turf'
-import gtfs2geojson from 'gtfs2geojson' //TODO: richtig?
 
 import { xhrRequest } from './xhr.js';
+import { stopsJSON, shapesJSON, getData } from "./getData";
 
 const lngLatOfVienna = [16.363449, 48.210033]; // The inital geographical centerpoint of the map. Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
 const mapboxStyle = 'mapbox://styles/mapbox/dark-v9'; // The map's Mapbox style. This must be an a JSON object conforming to the schema described in the Mapbox Style Specification , or a URL to such JSON.
 const mapboxHtmlContainerID = 'map'; // The HTML element in which Mapbox GL JS will render the map, or the element's string id . The specified element must have no children.
 const mapboxZoomLvl = 11; // The initial zoom level of the map. If  zoom is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to  0 .
-const mapboxDragPan = false; // If true, the 'drag to pan' interaction is enabled
+const mapboxDragPan = true; // If true, the 'drag to pan' interaction is enabled
 const mapboxDragRotate = true; // If true, the 'drag to rotate' interaction is enabled
 const mapboxBearingSnap = 7; // The threshold, measured in degrees, that determines when the map's bearing (rotation) will snap to north.
-const shapesURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
-const stopsURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt'
-let shapesJSON;
-let stopsJSON;
+export const shapesURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
+export const stopsURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt'
 
-xhrRequest('GET', shapesURL)
-    .then(function (e) {
-        //console.log(e.target.response);
-        shapesJSON = gtfs2geojson.lines(e.target.response.toString().replace('"',''));
-    }, function (e) {
-        console.log('error');// handle errors
-    });
-
-xhrRequest('GET', stopsURL)
-    .then(function (e) {
-        stopsJSON = gtfs2geojson.stops(e.target.response.toString().replace('"',''));
-        console.log(stopsJSON)
-    }, function (e) {
-        console.log('error');// handle errors
-    });
+getData();
 
 /**
  * Mapbox Setup
@@ -57,12 +41,12 @@ let map = new mapboxgl.Map({
 map.on('load', function(){
     map.addSource('shapes', {
         'type': 'geojson',
-        'data': shapesJSON //data //mapboxDataURL
+        'data': shapesJSON
         }
     )
     map.addSource('stops', {
         'type': 'geojson',
-        'data': stopsJSON //data //mapboxDataURL
+        'data': stopsJSON
         }
     )
     map.addLayer({
@@ -83,12 +67,10 @@ map.on('load', function(){
         'id': 'stops',
         'type': 'circle',
         'source': 'stops',
-        'layout': {
-
-        },
+        'layout': {},
         'paint': {
             'circle-color': '#fff',
-            'circle-radius': 2.5
+            'circle-radius': 2.5,
         }
     })
 })
