@@ -3,6 +3,6 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 
-import StopsURL from 'index';
-import wlShapesURL from 'index';
+import stopsURL from 'index';
+import shapesURL from 'index';
 
