@@ -5,7 +5,9 @@
 
 import mapboxgl from 'mapbox-gl'
 import turf from '@turf/turf'
-import gtfs2geojson from 'gtfs2geojson'
+import gtfs2geojson from 'gtfs2geojson' //TODO: richtig?
+
+import { xhrRequest } from './xhr.js';
 
 const lngLatOfVienna = [16.363449, 48.210033]; // The inital geographical centerpoint of the map. Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
 const mapboxStyle = 'mapbox://styles/mapbox/dark-v9'; // The map's Mapbox style. This must be an a JSON object conforming to the schema described in the Mapbox Style Specification , or a URL to such JSON.
@@ -14,17 +16,29 @@ const mapboxZoomLvl = 11; // The initial zoom level of the map. If  zoom is not 
 const mapboxDragPan = false; // If true, the 'drag to pan' interaction is enabled
 const mapboxDragRotate = true; // If true, the 'drag to rotate' interaction is enabled
 const mapboxBearingSnap = 7; // The threshold, measured in degrees, that determines when the map's bearing (rotation) will snap to north.
-const ShapesURL = 'https://go.gv.at/l9wlgtfsshapes'
-const StopsURL = 'https://go.gv.at/l9wlgtfsstops'
+const shapesURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
+const stopsURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt'
+let shapesJSON;
+let stopsJSON;
 
-let shapes = gtfs2geojson.lines(ShapesURL)
-let stops = gtfs2geojson.stops(StopsURL)
+xhrRequest('GET', shapesURL)
+    .then(function (e) {
+        //console.log(e.target.response);
+        shapesJSON = gtfs2geojson.lines(e.target.response.toString().replace('"',''));
+    }, function (e) {
+        console.log('error');// handle errors
+    });
 
-console.log(shapes)
-console.log(stops)
+xhrRequest('GET', stopsURL)
+    .then(function (e) {
+        stopsJSON = gtfs2geojson.stops(e.target.response.toString().replace('"',''));
+        console.log(stopsJSON)
+    }, function (e) {
+        console.log('error');// handle errors
+    });
 
-/** Mapbox Setup
- *
+/**
+ * Mapbox Setup
  */
 mapboxgl.accessToken = 'pk.eyJ1IjoibWR1bmtlbCIsImEiOiJjamFiM3Yxem8wbmswMzNxdHhoa2w1aWVpIn0.67dORj80QYe7k9CoQg-Fmw';
 let map = new mapboxgl.Map({
@@ -37,19 +51,24 @@ let map = new mapboxgl.Map({
     bearingSnap: mapboxBearingSnap
 });
 
-/** Draw map
- *
+/**
+ * Draw map
  */
 map.on('load', function(){
-    map.addSource('subways', {
+    map.addSource('shapes', {
         'type': 'geojson',
-        'data': shapes //data //mapboxDataURL
+        'data': shapesJSON //data //mapboxDataURL
+        }
+    )
+    map.addSource('stops', {
+        'type': 'geojson',
+        'data': stopsJSON //data //mapboxDataURL
         }
     )
     map.addLayer({
-        'id': 'subwayLines',
+        'id': 'shapes',
         'type': 'line',
-        'source': 'subways',
+        'source': 'shapes',
         'layout': {
             'line-join': 'round',
             'line-round-limit': 1,
@@ -58,6 +77,18 @@ map.on('load', function(){
         'paint': {
             'line-color': '#e4493d',
             'line-width': 2.5
+        }
+    })
+    map.addLayer({
+        'id': 'stops',
+        'type': 'circle',
+        'source': 'stops',
+        'layout': {
+
+        },
+        'paint': {
+            'circle-color': '#fff',
+            'circle-radius': 2.5
         }
     })
 })
