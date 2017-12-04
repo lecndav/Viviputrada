@@ -4,11 +4,11 @@
  */
 
 import mapboxgl from 'mapbox-gl'
-import {shapesJSON, stopsJSON} from "./getData.js";
+import {shapesJSON, stopsJSON, extractLine} from "./getData.js";
 import { mapboxHtmlContainerID, mapboxStyle, lngLatOfVienna, mapboxZoomLvl, mapboxDragPan, mapboxDragRotate, mapboxBearingSnap} from './index.js'
 
 /**
- * Mapbox Setup
+ *
  */
 export function drawMap() {
     mapboxgl.accessToken = 'pk.eyJ1IjoibWR1bmtlbCIsImEiOiJjamFiM3Yxem8wbmswMzNxdHhoa2w1aWVpIn0.67dORj80QYe7k9CoQg-Fmw';
@@ -21,6 +21,7 @@ export function drawMap() {
         dragRotate: mapboxDragRotate,
         bearingSnap: mapboxBearingSnap
     });
+
 
     map.on('load', function () {
         /**
@@ -57,8 +58,11 @@ export function drawMap() {
             },
             'paint': {
                 'line-color': '#e4493d',
-                'line-width': 2.5,
-                'line-blur': 10
+                'line-width': {
+                    'base': 3.5,
+                    'stops': [[12, 4], [20, 50]]
+                },
+                'line-blur': 15
             }
         }, firstSymbolId)
         map.addLayer({
@@ -68,12 +72,57 @@ export function drawMap() {
             'layout': {},
             'paint': {
                 'circle-color': '#fff',
-                'circle-radius': 2.5 ,
-                'circle-blur': 1
+                'circle-radius': {
+                    'base': 1.75,
+                    'stops': [[12, 2], [22, 100]]
+                },
+                'circle-blur': {
+                    'base': .5,
+                    'stops':[[12, .3], [22, .1]]
+                }
             }
         }, firstSymbolId)
     })
+
+    // When a click event occurs on a feature in the shapes, open a popup at the
+    // location of the click, with description HTML from its properties.
+    map.on('click', 'shapes', function (e) {
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(extractLine(e.features[0].properties.shape_id))
+            .addTo(map);
+    });
+
+    // Change the cursor to a pointer when the mouse is over the shapes.
+    map.on('mouseenter', 'shapes', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'shapes', function () {
+        map.getCanvas().style.cursor = '';
+    });
+
+    // When a click event occurs on a feature in the shapes, open a popup at the
+    // location of the click, with description HTML from its properties.
+    map.on('click', 'stops', function (e) {
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(e.features[0].properties.stop_name)
+            .addTo(map);
+    });
+
+    // Change the cursor to a pointer when the mouse is over the shapes.
+    map.on('mouseenter', 'stops', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'stops', function () {
+        map.getCanvas().style.cursor = '';
+    });
 }
+
 
 /*
 map.on('load', function () {
