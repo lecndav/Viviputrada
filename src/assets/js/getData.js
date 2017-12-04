@@ -3,7 +3,7 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 
-import gtfs2geojson from 'gtfs2geojson' //TODO: richtig?
+import gtfs2geojson from 'gtfs2geojson' //TODO: richtig oder require?
 import { xhrRequest } from './xhr.js';
 import { shapesURL, stopsURL } from './index.js';
 export let shapesJSON, stopsJSON;
