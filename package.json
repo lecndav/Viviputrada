@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@turf/turf": "^5.0.4",
+    "gtfs2geojson": "^2.0.0",
     "mapbox-gl": "^0.42.2"
   }
 }
