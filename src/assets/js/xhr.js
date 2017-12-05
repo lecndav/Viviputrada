@@ -14,6 +14,9 @@ export function xhrRequest(method, url) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=utf8')
+        /*xhr.onload = (event) => {
+            resolve(event.target.response)
+        }*/
         xhr.onload = resolve;
         xhr.onerror = reject;
         xhr.send();

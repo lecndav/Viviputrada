@@ -4,8 +4,10 @@
  */
 
 import mapboxgl from 'mapbox-gl'
-import {shapesJSON, stopsJSON, extractLine} from "./getData.js";
-import { mapboxHtmlContainerID, mapboxStyle, lngLatOfVienna, mapboxZoomLvl, mapboxDragPan, mapboxDragRotate, mapboxBearingSnap} from './index.js'
+import { shapesJSON, stopsJSON, extractLine } from './getData.js';
+import { mapboxHtmlContainerID, mapboxStyle, lngLatOfVienna, mapboxZoomLvl, mapboxDragPan, mapboxDragRotate, mapboxBearingSnap } from './index.js'
+
+let MapboxGeocoder = require('mapbox-gl-geocoder');
 
 /**
  *
@@ -27,6 +29,9 @@ export function drawMap() {
         /**
          * This is a function to get the index of the first symbol layer in the map style in order to put shapes and stops under it
          * https://www.mapbox.com/mapbox-gl-js/example/geojson-layer-in-stack/
+         * There are two ways to achieve the correct layer ordering:
+         * Move a layer after it has been added with map.moveLayer: https://www.mapbox.com/mapbox-gl-js/api/#map#movelayer
+         * Or define where in the layer stack the layer should be added by supplying a beforeLayer as a second parameter when calling map.addLayer(options, beforeLayer).
          */
         let layers = map.getStyle().layers;
         let firstSymbolId;
@@ -60,7 +65,7 @@ export function drawMap() {
                 'line-color': '#e4493d',
                 'line-width': {
                     'base': 3.5,
-                    'stops': [[12, 4], [20, 50]]
+                    'stops': [[5, 0], [10, 3], [18, 50]]
                 },
                 'line-blur': 15
             }
@@ -74,7 +79,7 @@ export function drawMap() {
                 'circle-color': '#fff',
                 'circle-radius': {
                     'base': 1.75,
-                    'stops': [[12, 2], [22, 100]]
+                    'stops': [[5, 0], [12, 2], [22, 100]]
                 },
                 'circle-blur': {
                     'base': .5,
@@ -121,49 +126,20 @@ export function drawMap() {
     map.on('mouseleave', 'stops', function () {
         map.getCanvas().style.cursor = '';
     });
-}
 
+    // add geocoder
+    map.addControl(new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        country: 'at'
+    }));
 
-/*
-map.on('load', function () {
-    map.addLayer({
-        'id': 'points',
-        'type': 'symbol',
-        'source': {
-            'type': 'geojson',
-            'data': {
-                'type': 'FeatureCollection',
-                'features': [{
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': [16.363449, 48.210033]
-                    },
-                    'properties': {
-                        'title': 'Center of Vienna',
-                        'icon': 'monument'
-                    }
-                }, {
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': [16.3568842,48.2284994]
-                    },
-                    'properties': {
-                        'title': 'test',
-                        'icon': 'circle'
-                    }
-                }]
-            }
+    // Add geolocate control to the map.
+    // requires sites to be served over HTTPS
+   map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
         },
-        'layout': {
-            'icon-image': '{icon}-15',
-            'text-field': '{title}',
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, 0.6],
-            'text-anchor': 'top'
-        }
-    });
-});
-*/
+        trackUserLocation: true
+    }));
 
+}
