@@ -16,17 +16,21 @@ export let shapesJSON, stopsJSON;
 export function getData() {
     xhrRequest('GET', shapesURL)
         .then(function (e) {
-            console.log(e.target.response);
+//            console.log(e.target.response);
             shapesJSON = gtfs2geojson.lines(e.target.response.toString().replace('"','')); // delete ' " ' from gtfs file, because they shouldn't be there according to Google's standard https://developers.google.com/transit/gtfs/examples/gtfs-feed
-            console.log(shapesJSON)
+//            console.log("SHAPES", JSON.stringify(shapesJSON))
         }, function (e) {
             console.log('error');// handle errors
         });
 
     xhrRequest('GET', stopsURL)
         .then(function (e) {
+          console.log("STOP RESPONSE ",e.target.response)
+          const p = document.createElement('P');
+          p.innerHTML = e.target.response;
+          document.body.appendChild(p);
             stopsJSON = gtfs2geojson.stops(e.target.response.toString().replace('"',''));
-            //console.log(stopsJSON)
+            console.log("STOPS", stopsJSON)
         }, function (e) {
             console.log('error');// handle errors
         });

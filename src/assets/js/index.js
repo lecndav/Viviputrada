@@ -3,6 +3,14 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 
+/*
+EXAMPLE HOW TO READ/SAVE SOME DATA ....
+import { xhrRequest } from './xhr.js';
+xhrRequest('GET', '/geojson/paths.json').then(result => console.log("TEST LOAD", result));
+ */
+
+
+
 import turf from '@turf/turf'
 
 import { getData } from "./getData";
@@ -16,11 +24,10 @@ export const mapboxDragPan = true; // If true, the 'drag to pan' interaction is 
 export const mapboxDragRotate = true; // If true, the 'drag to rotate' interaction is enabled
 export const mapboxBearingSnap = 14; // The threshold, measured in degrees, that determines when the map's bearing (rotation) will snap to north.
 export const shapesURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
-export const stopsURL = 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt'
+export const stopsURL = '/geojson/wrlinien-gtfs-stops.txt'; // 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt'
 
 getData();
 drawMap();
 
-
-import { xhrRequest } from './xhr.js';
-xhrRequest('GET', '/geojson/paths.json').then(result => console.log("TEST LOAD", result));
+const string = '123-U1-hallo-foo1.1.1-nowasWurscht';
+console.log(string.match(/[^-]*-([^-]+)-.*/));

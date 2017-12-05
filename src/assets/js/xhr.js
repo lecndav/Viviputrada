@@ -13,7 +13,8 @@ export function xhrRequest(method, url) {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
-        //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=utf8')
+//      xhr.setRequestHeader('Content-Type', 'application/json; charset=\'utf-8\'');
+      //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=utf8')
         /*xhr.onload = (event) => {
             resolve(event.target.response)
         }*/
