@@ -2,12 +2,11 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
-
-
 import { xhrRequest } from './xhr.js';
 import { SHAPES_URL, STOPS_URL } from './config.js';
 import gtfs2geojson from 'gtfs2geojson'
-export let shapesJSON, stopsJSON;
+
+let shapesJSON, stopsJSON;
 
 /** This function gets the shapes & stops from the WL server in GTFS format and calls the gtfs2geojson module to convert the data to geojson
  *
@@ -35,3 +34,5 @@ export function extractLine (s) {
 
     return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
 }
+
+export {shapesJSON, stopsJSON}

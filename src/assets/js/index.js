@@ -2,8 +2,6 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
-
-
 import { getData } from './getData';
 import { drawMap } from './drawMap';
 
