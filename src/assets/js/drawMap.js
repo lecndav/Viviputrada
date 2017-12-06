@@ -4,26 +4,28 @@
  */
 
 import mapboxgl from 'mapbox-gl'
+import MapboxGeocoder from 'mapbox-gl-geocoder'
+import turf from '@turf/turf'
 import { shapesJSON, stopsJSON, extractLine } from './getData.js';
-import { mapboxHtmlContainerID, mapboxStyle, lngLatOfVienna, mapboxZoomLvl, mapboxDragPan, mapboxDragRotate, mapboxBearingSnap } from './index.js'
-
-let MapboxGeocoder = require('mapbox-gl-geocoder');
+import { LNG_LAT_OF_VIENNA, MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE, MAPBOX_HTML_CONTAINER_ID, MAPBOX_ZOOM_LVL, MAPBOX_DRAG_PAN, MAPBOX_DRAG_ROTATE, MAPBOX_BEARING_SNAP, SHAPES_URL, STOPS_URL } from './config.js'
 
 /**
  *
  */
 export function drawMap() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWR1bmtlbCIsImEiOiJjamFiM3Yxem8wbmswMzNxdHhoa2w1aWVpIn0.67dORj80QYe7k9CoQg-Fmw';
+    /**
+     * initialize map
+     */
+    mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
     let map = new mapboxgl.Map({
-        container: mapboxHtmlContainerID,
-        style: mapboxStyle,
-        center: lngLatOfVienna,
-        zoom: mapboxZoomLvl,
-        pitchWithRotate: mapboxDragPan,
-        dragRotate: mapboxDragRotate,
-        bearingSnap: mapboxBearingSnap
+        container: MAPBOX_HTML_CONTAINER_ID,
+        style: MAPBOX_STYLE,
+        center: LNG_LAT_OF_VIENNA,
+        zoom: MAPBOX_ZOOM_LVL,
+        pitchWithRotate: MAPBOX_DRAG_PAN,
+        dragRotate: MAPBOX_DRAG_ROTATE,
+        bearingSnap: MAPBOX_BEARING_SNAP
     });
-
 
     map.on('load', function () {
         /**
@@ -42,6 +44,9 @@ export function drawMap() {
             }
         }
 
+        /**
+         * add Layers: shapes (lines), stops (circle)
+         */
         map.addSource('shapes', {
                 'type': 'geojson',
                 'data': shapesJSON
@@ -52,6 +57,7 @@ export function drawMap() {
                 'data': stopsJSON
             }
         )
+
         map.addLayer({
             'id': 'shapes',
             'type': 'line',
