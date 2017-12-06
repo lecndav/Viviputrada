@@ -1,81 +1,14 @@
 # Viviputrada - Visualizing Vienna's Public Transport Data
+This project uses GTFS data from the public transport agency of Vienna and also includes its real time data over their api. The idea is to show the position of trains and busses of the public transport system in Vienna in realtime through a web application that runs on desktops and on mobile devices as well. It should also offer the possibility to show the route of a specific line and the ability to see the next incoming trains and busses. There is also the option to see what has happened in the last 24 hours and a way for screen readers to also pass that information to people with visual disabilities. One key feature is the possibility to locate the device and inform about delays and incidents for the closest stations. 
 
-## Install
-Install gulp globally ...
-```
-$ npm install gulp -g
-```
-... and install the project setup
-```
-$ npm install
-```
+## Ressources
+- *[GTFS (shapes, stops, schedule)](https://www.data.gv.at/katalog/dataset/ab4a73b6-1c2d-42e1-b4d9-049e04889cf0)*
+- *[API (realtime data)](https://www.data.gv.at/katalog/dataset/add66f20-d033-4eee-b9a0-47019828e698)*
 
-## App
-The distribution files are generated in the `/dist` folder.
+## Sources of inspiration
 
-### View the App
-To 
-- **build** the app, 
-- **watch** the source files, and  
-- start a **server**, 
+## Attribution 
+- *[Mapbox](https://www.mapbox.com/)*
+- *[Wiener Linien](https://www.wienerlinien.at)*
 
-run ...
-```
-$ gulp app
-```
-Then open **`http://localhost:8000`** in your browser.
-
-(The files will be recompiled on change, but you need to reload the browser manually to see the changes)
-
-### Watch the App
-To 
-- **build** the app,
-- **watch** the source files,  
-- start a **server**, and
-- **livereload** the browser on-change of the files,
-
-run ...
-```
-$ gulp connect
-```
-Then open **`http://localhost:8001`** in your browser.
-
-### Build the App
-To build the app without starting a watcher and server, run
-```
-$ gulp build
-``` 
-(This will also generate the JSDoc documentation)
-
-## JSDoc
-The documentation is generated in the `/docs` folder.
-
-### View the Docs
-To 
-- **build** the docs and 
-- start a **server**, 
-
-run ...
-```
-$ gulp doc
-```
-Then open **`http://localhost:8002`** in your browser.
-
-### Watch the Docs
-To 
-- **build** the docs,
-- **watch** the js files,  
-- start a **server**, and
-- **livereload** the browser on-change of the files
-
-run ...
-```
-$ gulp live-doc
-```
-Then open **`http://localhost:8003`** in your browser.
-
-### Build the Docs
-To only generate the JSDoc documentation without starting a watcher and server, run
-```
-$ gulp build-doc
-```
+## License
