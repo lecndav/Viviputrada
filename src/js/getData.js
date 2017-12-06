@@ -29,9 +29,8 @@ export function getData() {
             console.log('error');// handle errors
         });
 }
-
+//bndd
 export function extractLine (s) {
-
     return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
 }
 

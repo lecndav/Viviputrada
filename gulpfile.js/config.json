@@ -22,7 +22,7 @@
       }
     ],
     "babel": {
-      "entry": "src/assets/js/index.js",
+      "entry": "src/js/index.js",
       "dest": "dist/js/",
       "destFile": "index.js"
     },
