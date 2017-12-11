@@ -4,9 +4,10 @@
  */
 import { xhrRequest } from './xhr.js';
 import { SHAPES_URL, STOPS_URL } from './_config.js';
+import { WL_API_KEY, WL_API_KEY_DEV, WL_API_EXAMPLE_URL, WL_API_BASE_URL, CURS_DOMAIN } from "./_config.js";
 import gtfs2geojson from 'gtfs2geojson'
 
-let shapesJSON, stopsJSON;
+let shapesJSON, stopsJSON, wlXhrResponse, rbl = 136, activeTrafficInfo = 'stoerunglang';
 
 /**
  * This function gets the shapes & stops from the WL server in GTFS format and calls the gtfs2geojson module to convert the data to geojson
@@ -18,7 +19,7 @@ export function getData() {
             shapesJSON = gtfs2geojson.lines(e.target.response.toString().replace('"','')); // delete ' " ' from gtfs file, because they shouldn't be there according to Google's standard https://developers.google.com/transit/gtfs/examples/gtfs-feed
             //console.log(shapesJSON)
         }, function (e) {
-            console.log('error'); // handle errors
+            console.log('error loading shapes'); // handle errors
         });
 
     xhrRequest('GET', STOPS_URL)
@@ -26,8 +27,18 @@ export function getData() {
             stopsJSON = gtfs2geojson.stops(e.target.response.toString().replace('"',''));
             //console.log(stopsJSON)
         }, function (e) {
-            console.log('error'); // handle errors
+            console.log('error loading stops'); // handle errors
         });
+
+    xhrRequest('GET', CURS_DOMAIN + WL_API_BASE_URL + '/monitor?rbl=' + rbl + '&activeTrafficInfo=' + activeTrafficInfo + '&sender=' + WL_API_KEY_DEV)
+        .then(function (e) {
+            console.log(e.target.response)
+            wlXhrResponse = e.target.response.toString().replace('"','');
+            //console.log(wlXhrResponse)
+            //console.log(JSON.stringify(wlXhrResponse))
+        }, function (e) {
+            console.log('error loading api ressource'); // handle errors
+        })
 }
 
 /**
