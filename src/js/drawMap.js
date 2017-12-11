@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
 import turf from '@turf/turf'
 import { shapesJSON, stopsJSON, extractLine } from './getData.js';
-import { LNG_LAT_OF_VIENNA, MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE, MAPBOX_HTML_CONTAINER_ID, MAPBOX_ZOOM_LVL, MAPBOX_DRAG_PAN, MAPBOX_DRAG_ROTATE, MAPBOX_BEARING_SNAP, SHAPES_URL, STOPS_URL } from './config.js'
+import { LNG_LAT_OF_VIENNA, MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE, MAPBOX_HTML_CONTAINER_ID, MAPBOX_ZOOM_LVL, MAPBOX_DRAG_PAN, MAPBOX_DRAG_ROTATE, MAPBOX_BEARING_SNAP, SHAPES_URL, STOPS_URL } from './_config.js'
 
 export function drawMap() {
     /**
@@ -143,5 +143,4 @@ export function drawMap() {
         },
         trackUserLocation: true
     }));
-
 }
