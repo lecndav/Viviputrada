@@ -2,12 +2,12 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
+import * as config from './_config.js'
+import { data } from './index.js'
+import { extractLineFromGTFS } from './fetchData.js'
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
-import turf from '@turf/turf'
-import { data } from './index.js'
-import { extractLine } from './fetchData.js'
-import * as config from './_config.js'
+// import turf from '@turf/turf'
 
 export function drawMap() {
     /**
@@ -43,16 +43,18 @@ export function drawMap() {
         /**
          * add Layers: shapes (lines), stops (circle)
          */
-        map.addSource('shapes', {
-                'type': 'geojson',
-                'data': data.getData('gtfs', 'shapes')
-            }
-        )
+        map.addSource('shapes',{
+            'type': 'geojson',
+            'data': data.getFetchedData('gtfs', 'shapes')
+        })
+
         map.addSource('stops', {
-                'type': 'geojson',
-                'data': data.getData('gtfs', 'stops')
-            }
-        )
+            'type': 'geojson',
+            'data': data.getFetchedData('gtfs', 'stops'),
+            // 'cluster': true,
+            // 'clusterMaxZoom': 20, // Max zoom to cluster points on
+            // 'clusterRadius': 5 // Radius of each cluster when clustering points (defaults to 50)
+        })
 
         map.addLayer({
             'id': 'shapes',
@@ -96,7 +98,7 @@ export function drawMap() {
     map.on('click', 'shapes', function (e) {
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            .setHTML(extractLine(e.features[0].properties.shape_id))
+            .setHTML(extractLineFromGTFS(e.features[0].properties.shape_id))
             .addTo(map);
     });
 
