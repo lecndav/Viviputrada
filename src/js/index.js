@@ -2,13 +2,21 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
-import { getData } from './getData';
+import * as getData from './fetchData';
 import { drawMap } from './drawMap';
+import * as config from "./_config";
+import Data from "./data";
 
-getData();
+/**
+ * Create a new instance of the Data Class
+ * @type {Data}
+ */
+export let data = new Data()
+data.initInputs()
+data.fetchAllData()
+
+getData.gtfsData(config.STOPS_GTFS_URL, 'stops')
+getData.gtfsData(config.SHAPES_GTFS_URL, 'shapes')
+
+getData.getData();
 drawMap();
-
-/*
-    import { xhrRequest } from './xhr.js';
-    xhrRequest('GET', '/geojson/paths.json').then(result => console.log("TEST LOAD", result));
-*/

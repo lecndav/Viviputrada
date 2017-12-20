@@ -5,22 +5,23 @@
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
 import turf from '@turf/turf'
-import { shapesJSON, stopsJSON, extractLine } from './getData.js';
-import { LNG_LAT_OF_VIENNA, MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE, MAPBOX_HTML_CONTAINER_ID, MAPBOX_ZOOM_LVL, MAPBOX_DRAG_PAN, MAPBOX_DRAG_ROTATE, MAPBOX_BEARING_SNAP, SHAPES_URL, STOPS_URL } from './_config.js'
+import { data } from './index.js'
+import { extractLine } from './fetchData.js'
+import * as config from './_config.js'
 
 export function drawMap() {
     /**
      * initialize map
      */
-    mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
+    mapboxgl.accessToken = config.MAPBOX_ACCESS_TOKEN;
     let map = new mapboxgl.Map({
-        container: MAPBOX_HTML_CONTAINER_ID,
-        style: MAPBOX_STYLE,
-        center: LNG_LAT_OF_VIENNA,
-        zoom: MAPBOX_ZOOM_LVL,
-        pitchWithRotate: MAPBOX_DRAG_PAN,
-        dragRotate: MAPBOX_DRAG_ROTATE,
-        bearingSnap: MAPBOX_BEARING_SNAP
+        container: config.MAPBOX_HTML_CONTAINER_ID,
+        style: config.MAPBOX_STYLE,
+        center: config.LNG_LAT_OF_VIENNA,
+        zoom: config.MAPBOX_ZOOM_LVL,
+        pitchWithRotate: config.MAPBOX_DRAG_PAN,
+        dragRotate: config.MAPBOX_DRAG_ROTATE,
+        bearingSnap: config.MAPBOX_BEARING_SNAP
     });
 
     map.on('load', function () {
@@ -39,18 +40,17 @@ export function drawMap() {
                 break;
             }
         }
-
         /**
          * add Layers: shapes (lines), stops (circle)
          */
         map.addSource('shapes', {
                 'type': 'geojson',
-                'data': shapesJSON
+                'data': data.getData('gtfs', 'shapes')
             }
         )
         map.addSource('stops', {
                 'type': 'geojson',
-                'data': stopsJSON
+                'data': data.getData('gtfs', 'stops')
             }
         )
 
@@ -67,7 +67,7 @@ export function drawMap() {
                 'line-color': '#e4493d',
                 'line-width': {
                     'base': 3.5,
-                    'stops': [[5, 0], [10, 3], [18, 50]]
+                    'stops': [[5, 0], [10, 3], [18, 40]]
                 },
                 'line-blur': 15
             }

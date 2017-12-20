@@ -11,10 +11,18 @@ export const MAPBOX_ZOOM_LVL = 12 // The initial zoom level of the map. If zoom 
 export const MAPBOX_DRAG_PAN = true // If true, the 'drag to pan' interaction is enabled
 export const MAPBOX_DRAG_ROTATE = true // If true, the 'drag to rotate' interaction is enabled
 export const MAPBOX_BEARING_SNAP = 14 // The threshold, measured in degrees, that determines when the map's bearing (rotation) will snap to north.
-export const SHAPES_URL = '/geojson/shapes.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
-export const STOPS_URL = '/geojson/stops.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt' stored locally to avoid charset issues
+export const SHAPES_GTFS_URL = '/geojson/shapes.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
+export const STOPS_GTFS_URL = '/geojson/stops.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt' stored locally to avoid charset issues
+export const JSON_URLS = [
+    '/json/wienerlinien-ogd-haltestellen.json',
+    '/json/wienerlinien-ogd-linien.json',
+    '/json/wienerlinien-ogd-steige.json'
+    //'/json/wienerlinien-ogd-teilstrecken-lonlat.json',
+    //'/json/wienerlinien-ogd-teilstrecken-wkt.json',
+    //'/json/wienerlinien-ogd-version.json'
+    ]
 export const WL_API_KEY_DEV = '6qkYCWmnCN27xxfi' // Development-key to transmit as 'sender' parameter for api requests at the realtime data api from Wiener Linien. Restricted to 100 requests per minute.
 export const WL_API_KEY = 'VxFSXGDhGJm59LWY' // Key to transmit as 'sender' parameter for api requests at the realtime data api from Wiener Linien
 export const WL_API_EXAMPLE_URL = 'http://www.wienerlinien.at/ogd_realtime/monitor?rbl=147&activateTrafficInfo=stoerungkurz&activateTrafficInfo=stoerunglang&activateTrafficInfo=aufzugsinfo&sender='
 export const WL_API_BASE_URL = 'http://www.wienerlinien.at/ogd_realtime' // from http://data.wien.gv.at/pdf/wienerlinien-echtzeitdaten-dokumentation.pdf
-export const CURS_DOMAIN = 'https://cors-anywhere.herokuapp.com/' //
+export const CORS_DOMAIN = 'https://cors-anywhere.herokuapp.com/' //

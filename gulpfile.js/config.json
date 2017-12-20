@@ -19,6 +19,18 @@
           "src/geojson/**/*"
         ],
         "dest": "dist/geojson/"
+      },
+      {
+        "src": [
+          "src/csv/**/*"
+        ],
+        "dest": "dist/csv/"
+      },
+      {
+        "src": [
+          "src/json/**/*"
+        ],
+        "dest": "dist/json/"
       }
     ],
     "babel": {
