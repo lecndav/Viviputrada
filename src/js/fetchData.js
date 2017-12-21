@@ -8,7 +8,7 @@ import { xhrRequest } from './xhr.js';
 import gtfs2geojson from 'gtfs2geojson'
 //import csv from 'csvtojson'
 
-let  wlXhrResponse, rbl = 136, activeTrafficInfo = 'stoerunglang';
+let  wlXhrResponse, activeTrafficInfo = 'stoerunglang';
 
 /**
  * read GTFS data (stops, shapes), convert to geoJSON by calling gtfs2geojson node and store it in the data object
@@ -44,12 +44,14 @@ export function fetchData() {
     /**
      * API CALL
      */
-    xhrRequest('GET', `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?rbl=${rbl}&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}`) //
+    xhrRequest('GET', buildApiUrl([135, 136])) //TODO: TEST
         .then(function (e) {
             wlXhrResponse = JSON.parse(e.target.response);
+            console.log(wlXhrResponse)
         }, function (e) {
             console.log('error loading api ressource'); // handle errors
-        });}
+        });
+}
 
 /**
  * TODO: move to helper functions
@@ -60,6 +62,24 @@ export function extractLineFromGTFS (s) {
     return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
 }
 
+/**
+ *
+ * @param s
+ * @returns {string}
+ */
 export function extraxtNameFromFilename (s) {
     return (/[^-]*-[^-]*-([^-]+)\..*/ig).exec(s)[1];
+}
+
+/**
+ *
+ * @param rbl
+ * @returns {string}
+ */
+export function buildApiUrl(rbl) {
+    let rblList = ''
+    rbl.forEach(currentValue => {
+        rblList += `&rbl=${currentValue}`
+    })
+    return `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
 }
