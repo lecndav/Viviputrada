@@ -3,13 +3,19 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 import * as config from './_config.js'
-import { data } from './index.js'
 import { extractLineFromGTFS } from './fetchData.js'
+import { parseLines, parseStops } from './jsonToGeoJson.js';
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
 // import turf from '@turf/turf'
 
 export function drawMap() {
+    /**
+     * 
+     */
+    let lines = parseLines(), stops = parseStops()
+    console.log(stops)
+
     /**
      * initialize map
      */
@@ -24,6 +30,9 @@ export function drawMap() {
         bearingSnap: config.MAPBOX_BEARING_SNAP
     });
 
+    /**
+     *
+     */
     map.on('load', function () {
         /**
          * This is a function to get the index of the first symbol layer in the map style in order to put shapes and stops under it
@@ -45,17 +54,18 @@ export function drawMap() {
          */
         map.addSource('shapes',{
             'type': 'geojson',
-            'data': data.getFetchedData('gtfs', 'shapes')
+            'data': lines
         })
 
         map.addSource('stops', {
             'type': 'geojson',
-            'data': data.getFetchedData('gtfs', 'stops'),
+            'data': stops
             // 'cluster': true,
             // 'clusterMaxZoom': 20, // Max zoom to cluster points on
             // 'clusterRadius': 5 // Radius of each cluster when clustering points (defaults to 50)
         })
 
+        /*
         map.addLayer({
             'id': 'shapes',
             'type': 'line',
@@ -69,11 +79,15 @@ export function drawMap() {
                 'line-color': '#e4493d',
                 'line-width': {
                     'base': 3.5,
-                    'stops': [[5, 0], [10, 3], [18, 40]]
+                    'stops': [[7, 0], [10, 2], [18, 40]]
                 },
-                'line-blur': 15
+                'line-blur': {
+                    'base': 10,
+                    'stops':[[12, 5], [22, 15]]
+                }
             }
         }, firstSymbolId)
+        */
         map.addLayer({
             'id': 'stops',
             'type': 'circle',
@@ -82,8 +96,8 @@ export function drawMap() {
             'paint': {
                 'circle-color': '#fff',
                 'circle-radius': {
-                    'base': 1.75,
-                    'stops': [[5, 0], [12, 2], [22, 100]]
+                    'base': 4,
+                    'stops': [[7, 0], [10, 3], [16, 20], [20, 100]]
                 },
                 'circle-blur': {
                     'base': .5,
@@ -98,7 +112,7 @@ export function drawMap() {
     map.on('click', 'shapes', function (e) {
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            .setHTML(extractLineFromGTFS(e.features[0].properties.shape_id))
+            .setHTML(e.features[0].properties.shape_id)
             .addTo(map);
     });
 
@@ -117,7 +131,8 @@ export function drawMap() {
     map.on('click', 'stops', function (e) {
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            .setHTML(e.features[0].properties.stop_name)
+            .setHTML(`${e.features[0].properties.stop_name} ${e.features[0].properties.stop_id}`)
+            //.setHTML(getInfos(e))
             .addTo(map);
     });
 

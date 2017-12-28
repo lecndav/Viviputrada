@@ -4,7 +4,6 @@
  */
 import * as config from './_config.js';
 import Data from './Data.js';
-import Station from './Station.js'
 import * as getData from './fetchData.js';
 import { drawMap } from './drawMap.js';
 
@@ -13,22 +12,15 @@ import { drawMap } from './drawMap.js';
  * @type {Data}
  */
 
-export let data = new Data()
+//export let data = new Data()
 
 /**
  * Fill Data
  */
-data.initInputs()
-getData.gtfsData(config.STOPS_GTFS_URL, 'stops')
-getData.gtfsData(config.SHAPES_GTFS_URL, 'shapes')
-getData.fetchData();
-
-/**
- * Create new instace of Station object
- * @type {Station}
- */
-export let myStation = new Station()
-//console.log(myStation)
+//data.initInputs()
+//getData.gtfsData(config.STOPS_GTFS_URL, 'stops')
+//getData.gtfsData(config.SHAPES_GTFS_URL, 'shapes')
+//getData.fetchData();
 
 /**
  * draw Map

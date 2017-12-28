@@ -13,6 +13,7 @@ let  wlXhrResponse, activeTrafficInfo = 'stoerunglang';
 /**
  * read GTFS data (stops, shapes), convert to geoJSON by calling gtfs2geojson node and store it in the data object
  */
+/*
 export function gtfsData(url, property){
     xhrRequest('GET', url)
         .then(function (e) {
@@ -26,6 +27,7 @@ export function gtfsData(url, property){
             console.log(`error loading ${url}`); // handle errors
         });
 }
+*/
 
 /**
  * get JSON Data
@@ -34,7 +36,7 @@ export function fetchData() {
     config.JSON_URLS.forEach(currentValue => {
         xhrRequest('GET', currentValue)
             .then(function (e) {
-                // TODO: movce to own helper function
+                // TODO: move to own helper function
                 data.setFetchedData('json',[extraxtNameFromFilename(currentValue)],JSON.parse(e.target.response))
             }, function (e) {
                 console.log(`error lading ${currentValue}`); // handle errors
@@ -58,9 +60,11 @@ export function fetchData() {
  * @param s
  * @returns {string}
  */
-export function extractLineFromGTFS (s) {
-    return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
-}
+
+//export function extractLineFromGTFS (s) {
+//    return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
+//}
+
 
 /**
  *
@@ -68,7 +72,7 @@ export function extractLineFromGTFS (s) {
  * @returns {string}
  */
 export function extraxtNameFromFilename (s) {
-    return (/[^-]*-[^-]*-([^-]+)\..*/ig).exec(s)[1];
+   return (/[^-]*-[^-]*-([^-]+)\..*/ig).exec(s)[1];
 }
 
 /**
