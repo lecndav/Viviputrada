@@ -3,11 +3,21 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 import * as config from './_config.js'
-import { extractLineFromGTFS } from './fetchData.js'
 import { parseLines, parseStops } from './jsonToGeoJson.js';
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
+import steige from '../json/wienerlinien-ogd-steige.json'
 // import turf from '@turf/turf'
+
+function getInfos (e) {
+    const stopID = e.features[0].properties.stop_id
+    const stopName = e.features[0].properties.stop_name
+    const rbl = steige.reduce(function(map, row, id){
+        return row.FK_HALTESTELLEN_ID
+    }, {})
+
+    return `${stopName} ${stopID} ${rbl}`
+}
 
 export function drawMap() {
     /**
@@ -129,10 +139,11 @@ export function drawMap() {
     // When a click event occurs on a feature in the shapes, open a popup at the
     // location of the click, with description HTML from its properties.
     map.on('click', 'stops', function (e) {
+
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            .setHTML(`${e.features[0].properties.stop_name} ${e.features[0].properties.stop_id}`)
-            //.setHTML(getInfos(e))
+            //.setHTML(`${e.features[0].properties.stop_name} ${e.features[0].properties.stop_id}`)
+            .setHTML(getInfos(e))
             .addTo(map);
     });
 
