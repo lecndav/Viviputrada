@@ -12,11 +12,20 @@ import steige from '../json/wienerlinien-ogd-steige.json'
 function getInfos (e) {
     const stopID = e.features[0].properties.stop_id
     const stopName = e.features[0].properties.stop_name
-    const rbl = steige.reduce(function(map, row, id){
-        return row.FK_HALTESTELLEN_ID
-    }, {})
+    const steigeInHaltestelle = steige.filter(
+        function(steige){
+            return steige.FK_HALTESTELLEN_ID == e.features[0].properties.stop_id
+        }
+    )
 
-    return `${stopName} ${stopID} ${rbl}`
+    const rblNumbers = function(numbers = []){
+        for (let i in steigeInHaltestelle){
+            numbers.push(steigeInHaltestelle[i].RBL_NUMMER)
+        }
+        return numbers
+    }
+
+    return `${stopName} ${stopID} ${rblNumbers()}`
 }
 
 export function drawMap() {
@@ -139,7 +148,6 @@ export function drawMap() {
     // When a click event occurs on a feature in the shapes, open a popup at the
     // location of the click, with description HTML from its properties.
     map.on('click', 'stops', function (e) {
-
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             //.setHTML(`${e.features[0].properties.stop_name} ${e.features[0].properties.stop_id}`)
