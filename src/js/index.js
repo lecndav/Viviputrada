@@ -15,10 +15,8 @@ import { drawMap } from './drawMap.js';
   */
 
 /**
- * Create a new instance of the Data object
- * @type {Data}
+ * Get Data
  */
-
 //export let data = new Data()
 
 /**
@@ -27,7 +25,7 @@ import { drawMap } from './drawMap.js';
 //data.initInputs()
 //getData.gtfsData(config.STOPS_GTFS_URL, 'stops')
 //getData.gtfsData(config.SHAPES_GTFS_URL, 'shapes')
-//getData.fetchData();
+
 
 /**
  * draw Map

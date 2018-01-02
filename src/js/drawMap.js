@@ -4,6 +4,7 @@
  */
 import * as config from './_config.js'
 import { parseLines, parseStops } from './jsonToGeoJson.js';
+import * as getData from './fetchData.js';
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
 import steige from '../json/wienerlinien-ogd-steige.json'
@@ -24,16 +25,18 @@ function getInfos (e) {
         }
         return numbers
     }
-
-    return `${stopName} ${stopID} ${rblNumbers()}`
-}
+    console.log(`${getData.fetchData(rblNumbers())}`)
+    return `<h1>${stopName}</h1>
+            <p>ID: ${stopID}</p>
+            <p>RBL: ${rblNumbers()}</p>
+            `}
 
 export function drawMap() {
     /**
      * 
      */
     let lines = parseLines(), stops = parseStops()
-    console.log(stops)
+    //console.log(stops)
 
     /**
      * initialize map
@@ -71,10 +74,11 @@ export function drawMap() {
         /**
          * add Layers: shapes (lines), stops (circle)
          */
+        /*
         map.addSource('shapes',{
             'type': 'geojson',
             'data': lines
-        })
+        })*/
 
         map.addSource('stops', {
             'type': 'geojson',
@@ -116,7 +120,7 @@ export function drawMap() {
                 'circle-color': '#fff',
                 'circle-radius': {
                     'base': 4,
-                    'stops': [[7, 0], [10, 3], [16, 20], [20, 100]]
+                    'stops': [[5, 0], [12, 4], [16, 15], [20, 100]]
                 },
                 'circle-blur': {
                     'base': .5,
@@ -168,7 +172,10 @@ export function drawMap() {
     // add geocoder
     map.addControl(new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        country: 'at'
+        //country: config.MAPBOX_GEOCORDER,
+        placeholder: 'Suche',
+        //proximity: [48.323056, 16.578611]
+        bbox: [16.182778, 48.118333, 16.578611, 48.323056]
     }));
 
     // Add geolocate control to the map.

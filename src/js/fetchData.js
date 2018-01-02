@@ -1,14 +1,37 @@
-/** @file This is the file that gets data gtfs and realtime data
+/** @file This is the file that gets realtime data
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 import * as config from "./_config.js";
-import { data } from './index.js'
-import { xhrRequest } from './xhr.js';
-import gtfs2geojson from 'gtfs2geojson'
+import { xhrRequest, fetchRessource } from './xhr.js';
+import steige from '../json/wienerlinien-ogd-steige.json'
+//import { data } from './index.js'
+//import gtfs2geojson from 'gtfs2geojson'
 //import csv from 'csvtojson'
 
-let  wlXhrResponse, activeTrafficInfo = 'stoerunglang';
+let  wlXhrResponse, activeTrafficInfo = 'stoerunglang', rblNumbers = new Set();
+/*
+export function getAllRblNumbers(){
+    const temp = steige.filter(
+        function(steige){
+            if(steige.RBL_NUMMER) {
+                rblNumbers.add(steige.RBL_NUMMER)
+            }
+        }
+    )
+
+    console.log(buildApiUrl(rblNumbers))
+}*/
+
+export function buildApiUrl(rbl) {
+    let rblList = ''
+    console.log(rbl)
+    rbl.forEach(currentValue => {
+        rblList += `&rbl=${currentValue}`
+    })
+    return `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
+}
+
 
 /**
  * read GTFS data (stops, shapes), convert to geoJSON by calling gtfs2geojson node and store it in the data object
@@ -32,27 +55,21 @@ export function gtfsData(url, property){
 /**
  * get JSON Data
  */
-export function fetchData() {
-    config.JSON_URLS.forEach(currentValue => {
-        xhrRequest('GET', currentValue)
-            .then(function (e) {
-                // TODO: move to own helper function
-                data.setFetchedData('json',[extraxtNameFromFilename(currentValue)],JSON.parse(e.target.response))
-            }, function (e) {
-                console.log(`error lading ${currentValue}`); // handle errors
-            });
-    })
+export function fetchData(rblNumber) {
 
     /**
      * API CALL
      */
-    xhrRequest('GET', buildApiUrl([135, 136])) //TODO: TEST
+    fetchRessource(buildApiUrl(rblNumber))
+/*
+    xhrRequest('GET', buildApiUrl(rblNumber)) //TODO: TEST
         .then(function (e) {
             wlXhrResponse = JSON.parse(e.target.response);
             console.log(wlXhrResponse)
         }, function (e) {
             console.log('error loading api ressource'); // handle errors
         });
+        */
 }
 
 /**
@@ -65,25 +82,6 @@ export function fetchData() {
 //    return (/[^-]*-([^-]+)-.*/ig).exec(s)[1];
 //}
 
-
-/**
- *
- * @param s
- * @returns {string}
- */
 export function extraxtNameFromFilename (s) {
    return (/[^-]*-[^-]*-([^-]+)\..*/ig).exec(s)[1];
-}
-
-/**
- *
- * @param rbl
- * @returns {string}
- */
-export function buildApiUrl(rbl) {
-    let rblList = ''
-    rbl.forEach(currentValue => {
-        rblList += `&rbl=${currentValue}`
-    })
-    return `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
 }

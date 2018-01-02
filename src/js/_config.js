@@ -11,6 +11,7 @@ export const MAPBOX_ZOOM_LVL = 12 // The initial zoom level of the map. If zoom 
 export const MAPBOX_DRAG_PAN = true // If true, the 'drag to pan' interaction is enabled
 export const MAPBOX_DRAG_ROTATE = true // If true, the 'drag to rotate' interaction is enabled
 export const MAPBOX_BEARING_SNAP = 14 // The threshold, measured in degrees, that determines when the map's bearing (rotation) will snap to north.
+export const MAPBOX_GEOCORDER = 'at' //
 export const SHAPES_GTFS_URL = '/geojson/shapes.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-shapes.txt'
 export const STOPS_GTFS_URL = '/geojson/stops.txt' // Ressource from 'https://www.data.wien.gv.at/txt/wrlinien-gtfs-stops.txt' stored locally to avoid charset issues
 export const JSON_URLS = [

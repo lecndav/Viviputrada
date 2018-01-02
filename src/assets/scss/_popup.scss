@@ -1,5 +1,9 @@
 .mapboxgl-popup {
-  max-width: 400px;
+  max-width: 80%;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
   color: black;
+  word-wrap: break-word;
+}
+.mapboxgl-popup-close-button {
+  font-size: 2em;
 }
