@@ -13,8 +13,7 @@
 
 export function fetchRessource(url) {
     fetch(url, {
-        method: 'GET',
-        mode: 'no-cors'
+        method: 'GET'
     })
         .then(handleResponse)
         .then(data => console.log(url, data))
@@ -46,6 +45,7 @@ function handleJSONResponse (response) {
             }
         })
 }
+
 function handleTextResponse (response) {
     return response.text()
         .then(text => {

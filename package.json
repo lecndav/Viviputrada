@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@turf/turf": "^5.0.4",
+    "cors-anywhere": "^0.4.1",
     "csvtojson": "^1.1.9",
     "gtfs2geojson": "^2.0.0",
     "mapbox-gl": "^0.42.2",

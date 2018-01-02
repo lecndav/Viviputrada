@@ -3,7 +3,7 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 import * as config from "./_config.js";
-import { xhrRequest, fetchRessource } from './xhr.js';
+import { fetchRessource } from './xhr.js';
 import steige from '../json/wienerlinien-ogd-steige.json'
 //import { data } from './index.js'
 //import gtfs2geojson from 'gtfs2geojson'
@@ -29,7 +29,7 @@ export function buildApiUrl(rbl) {
     rbl.forEach(currentValue => {
         rblList += `&rbl=${currentValue}`
     })
-    return `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
+    return `http://localhost:8080/${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
 }
 
 
@@ -51,6 +51,7 @@ export function gtfsData(url, property){
         });
 }
 */
+
 
 /**
  * get JSON Data

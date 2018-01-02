@@ -19,16 +19,23 @@ function getInfos (e) {
         }
     )
 
-    const rblNumbers = function(numbers = []){
+    const rblNumbers = function(numbers = new Set()){
         for (let i in steigeInHaltestelle){
-            numbers.push(steigeInHaltestelle[i].RBL_NUMMER)
+            if(steigeInHaltestelle[i].RBL_NUMMER){
+                numbers.add(steigeInHaltestelle[i].RBL_NUMMER)
+            }
         }
         return numbers
     }
-    console.log(`${getData.fetchData(rblNumbers())}`)
+
+    if(rblNumbers().size) {
+        getData.fetchData(rblNumbers())
+    } else {
+        console.log(`no realtime data`)
+    }
+
     return `<h1>${stopName}</h1>
             <p>ID: ${stopID}</p>
-            <p>RBL: ${rblNumbers()}</p>
             `}
 
 export function drawMap() {
