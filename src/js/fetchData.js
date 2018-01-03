@@ -25,13 +25,12 @@ export function getAllRblNumbers(){
 
 export function buildApiUrl(rbl) {
     let rblList = ''
-    console.log(rbl)
+    //console.log(rbl)
     rbl.forEach(currentValue => {
         rblList += `&rbl=${currentValue}`
     })
     return `http://localhost:8080/${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
 }
-
 
 /**
  * read GTFS data (stops, shapes), convert to geoJSON by calling gtfs2geojson node and store it in the data object
@@ -57,11 +56,7 @@ export function gtfsData(url, property){
  * get JSON Data
  */
 export function fetchData(rblNumber) {
-
-    /**
-     * API CALL
-     */
-    fetchRessource(buildApiUrl(rblNumber))
+    return fetchRessource(buildApiUrl(rblNumber))
 /*
     xhrRequest('GET', buildApiUrl(rblNumber)) //TODO: TEST
         .then(function (e) {

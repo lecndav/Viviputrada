@@ -2,9 +2,10 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
+import { updatePopup } from './drawMap.js';
+
 /**
  * return a created promise for the async call using es6 fetch()
- * @param method
  * @param url
  * @returns {Promise<any>}
  */
@@ -12,11 +13,10 @@
 // https://css-tricks.com/using-fetch/
 
 export function fetchRessource(url) {
-    fetch(url, {
-        method: 'GET'
-    })
+    fetch(url, {method: 'GET'})
         .then(handleResponse)
-        .then(data => console.log(url, data))
+        // .then(data => console.log(url, data))
+        .then(data => updatePopup(data))
         .catch(error => console.log(error))
 }
 
@@ -27,7 +27,7 @@ function handleResponse (response) {
     } else if (contentType.includes('text/html')) {
         return handleTextResponse(response)
     } else {
-        // Other response types as necessary. I haven't found a need for them yet though.
+        // Other response types
         throw new Error(`Sorry, content-type ${contentType} not supported`)
     }
 }

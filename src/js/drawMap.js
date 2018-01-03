@@ -13,12 +13,15 @@ import steige from '../json/wienerlinien-ogd-steige.json'
 function getInfos (e) {
     const stopID = e.features[0].properties.stop_id
     const stopName = e.features[0].properties.stop_name
+
+    // filter all plattforms (='steige') that are combined in that stop (='haltestelle')
     const steigeInHaltestelle = steige.filter(
         function(steige){
             return steige.FK_HALTESTELLEN_ID == e.features[0].properties.stop_id
         }
     )
 
+    // Store all  rbl numbers in a Set to avoid duplicates
     const rblNumbers = function(numbers = new Set()){
         for (let i in steigeInHaltestelle){
             if(steigeInHaltestelle[i].RBL_NUMMER){
@@ -28,6 +31,7 @@ function getInfos (e) {
         return numbers
     }
 
+    // Only make an API call, if there are rbl (=realtime data) available for this stop.
     if(rblNumbers().size) {
         getData.fetchData(rblNumbers())
     } else {
@@ -35,8 +39,11 @@ function getInfos (e) {
     }
 
     return `<h1>${stopName}</h1>
-            <p>ID: ${stopID}</p>
-            `}
+            <p>ID: ${stopID}</p>`}
+
+export function updatePopup(data){
+    console.log(data)
+}
 
 export function drawMap() {
     /**
@@ -139,6 +146,7 @@ export function drawMap() {
 
     // When a click event occurs on a feature in the shapes, open a popup at the
     // location of the click, with description HTML from its properties.
+    /*
     map.on('click', 'shapes', function (e) {
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
@@ -155,14 +163,16 @@ export function drawMap() {
     map.on('mouseleave', 'shapes', function () {
         map.getCanvas().style.cursor = '';
     });
-
+*/
     // When a click event occurs on a feature in the shapes, open a popup at the
     // location of the click, with description HTML from its properties.
+
     map.on('click', 'stops', function (e) {
-        new mapboxgl.Popup()
+        let div = window.document.createElement('div');
+        div.innerHTML = getInfos(e);
+        let popup = new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            //.setHTML(`${e.features[0].properties.stop_name} ${e.features[0].properties.stop_id}`)
-            .setHTML(getInfos(e))
+            .setDOMContent(div)
             .addTo(map);
     });
 
@@ -179,9 +189,8 @@ export function drawMap() {
     // add geocoder
     map.addControl(new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        //country: config.MAPBOX_GEOCORDER,
+        country: config.MAPBOX_GEOCORDER,
         placeholder: 'Suche',
-        //proximity: [48.323056, 16.578611]
         bbox: [16.182778, 48.118333, 16.578611, 48.323056]
     }));
 
