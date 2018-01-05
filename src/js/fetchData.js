@@ -4,7 +4,7 @@
  */
 import * as config from "./_config.js";
 import { fetchRessource } from './xhr.js';
-import steige from '../json/wienerlinien-ogd-steige.json'
+import steige from '../assets/json/wienerlinien-ogd-steige.json'
 //import { data } from './index.js'
 //import gtfs2geojson from 'gtfs2geojson'
 //import csv from 'csvtojson'

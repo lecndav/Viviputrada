@@ -3,9 +3,9 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 
-import haltestellen from '../json/wienerlinien-ogd-haltestellen.json';
-import strecken from '../json/wienerlinien-ogd-teilstrecken-lonlat.json';
-//import steige from '../json/wienerlinien-ogd-steige.json';
+import haltestellen from '../assets/json/wienerlinien-ogd-haltestellen.json';
+import strecken from '../assets/json/wienerlinien-ogd-teilstrecken-lonlat.json';
+//import steige from '../assets/json/wienerlinien-ogd-steige.json';
 
 export function parseLines() {
     // console.log(haltestellen[0]);
@@ -97,3 +97,4 @@ export function parseStops() {
         })
     };
 }
+

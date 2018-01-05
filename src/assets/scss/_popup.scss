@@ -1,9 +1,16 @@
 .mapboxgl-popup {
   max-width: 80%;
+  max-height: 80%;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  padding: 0px;
+  margin: 0px;
   color: black;
-  word-wrap: break-word;
 }
 .mapboxgl-popup-close-button {
-  font-size: 2em;
+  font-size: 2.5em;
+
+}
+#popupWithRealtimeData{
+  //text-align: left;
+
 }

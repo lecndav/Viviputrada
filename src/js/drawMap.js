@@ -7,7 +7,7 @@ import { parseLines, parseStops } from './jsonToGeoJson.js';
 import * as getData from './fetchData.js';
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
-import steige from '../json/wienerlinien-ogd-steige.json'
+import steige from '../assets/json/wienerlinien-ogd-steige.json'
 // import turf from '@turf/turf'
 
 function getInfos (e) {
@@ -35,14 +35,44 @@ function getInfos (e) {
     if(rblNumbers().size) {
         getData.fetchData(rblNumbers())
     } else {
-        console.log(`no realtime data`)
+        updatePopup(0)
     }
 
-    return `<h1>${stopName}</h1>
-            <p>ID: ${stopID}</p>`}
+    return `<h1>${stopName}</h1>`}
 
 export function updatePopup(data){
     console.log(data)
+    let div = document.getElementById('popupWithRealtimeData')
+    let divContent = ''
+    if (!data){
+        divContent = 'no realtime data'
+        console.log(divContent)
+    } else {
+        divContent = `
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Line</th>
+              <th scope="col">Towards</th>
+              <th scope="col">Departure</th>
+            </tr>
+          </thead>
+          <tbody>`
+        for(let i in data.data.monitors){
+            for (let j in data.data.monitors[i].lines){
+                divContent += `
+                <tr>
+                  <th scope="row">${data.data.monitors[i].lines[j].name}</th>
+                  <td>${data.data.monitors[i].lines[j].towards}</td>
+                  <td>${data.data.monitors[i].lines[j].departures.departure[0].departureTime.countdown} min</td>
+                </tr>`
+            }
+        }
+        divContent += '</tbody>' +
+            '</table>'
+    }
+    console.log(`after if ${divContent}`)
+    div.innerHTML = divContent
 }
 
 export function drawMap() {
@@ -168,7 +198,8 @@ export function drawMap() {
     // location of the click, with description HTML from its properties.
 
     map.on('click', 'stops', function (e) {
-        let div = window.document.createElement('div');
+        let div = window.document.createElement('div')
+        div.setAttribute('id', 'popupWithRealtimeData')
         div.innerHTML = getInfos(e);
         let popup = new mapboxgl.Popup()
             .setLngLat(e.lngLat)
@@ -186,12 +217,12 @@ export function drawMap() {
         map.getCanvas().style.cursor = '';
     });
 
-    // add geocoder
+    // add Geocoder
     map.addControl(new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         country: config.MAPBOX_GEOCORDER,
         placeholder: 'Suche',
-        bbox: [16.182778, 48.118333, 16.578611, 48.323056]
+        bbox: [16.182778, 48.118333, 16.578611, 48.323056] //frame aroung Vienna
     }));
 
     // Add geolocate control to the map.
