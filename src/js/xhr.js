@@ -6,17 +6,17 @@ import { updatePopup } from './drawMap.js';
 
 /**
  * return a created promise for the async call using es6 fetch()
- * @param url
+ * @param url, stopName
  * @returns {Promise<any>}
  */
 
 // https://css-tricks.com/using-fetch/
 
-export function fetchRessource(url) {
+export function fetchRessource(url, stopName) {
     fetch(url, {method: 'GET'})
         .then(handleResponse)
         // .then(data => console.log(url, data))
-        .then(data => updatePopup(data))
+        .then(data => updatePopup(data, stopName))
         .catch(error => console.log(error))
 }
 

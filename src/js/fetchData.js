@@ -25,11 +25,10 @@ export function getAllRblNumbers(){
 
 export function buildApiUrl(rbl) {
     let rblList = ''
-    //console.log(rbl)
     rbl.forEach(currentValue => {
         rblList += `&rbl=${currentValue}`
     })
-    return `http://localhost:8080/${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
+    return `${config.CORS_DOMAIN}${config.WL_API_BASE_URL}/monitor?&activeTrafficInfo=${activeTrafficInfo}&sender=${config.WL_API_KEY_DEV}${rblList}`
 }
 
 /**
@@ -55,10 +54,10 @@ export function gtfsData(url, property){
 /**
  * get JSON Data
  */
-export function fetchData(rblNumber) {
-    return fetchRessource(buildApiUrl(rblNumber))
+export function fetchData(rblNumber, stopName) {
+    return fetchRessource(buildApiUrl(rblNumber), stopName)
 /*
-    xhrRequest('GET', buildApiUrl(rblNumber)) //TODO: TEST
+    xhrRequest('GET', buildApiUrl(rblNumber))
         .then(function (e) {
             wlXhrResponse = JSON.parse(e.target.response);
             console.log(wlXhrResponse)
@@ -69,7 +68,7 @@ export function fetchData(rblNumber) {
 }
 
 /**
- * TODO: move to helper functions
+ *
  * @param s
  * @returns {string}
  */
