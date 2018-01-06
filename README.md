@@ -1,4 +1,4 @@
-# Viviputrada - Visualizing Vienna's Public Transport Data
+# (WiP) Viviputrada - Visualizing Vienna's Public Transport Data
 This project uses GTFS data from the public transport agency of Vienna and also includes its real time data over their api. The idea is to show the position of trains and busses of the public transport system in Vienna in realtime through a web application that runs on desktops and on mobile devices as well. It should also offer the possibility to show the route of a specific line and the ability to see the next incoming trains and busses. There is also the option to see what has happened in the last 24 hours and a way for screen readers to also pass that information to people with visual disabilities. One key feature is the possibility to locate the device and inform about delays and incidents for the closest stations. 
 
 ## Ressources
