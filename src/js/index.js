@@ -2,32 +2,13 @@
  * @version 0.2
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
-import * as config from './_config.js';
-import * as getData from './fetchData.js';
 import { drawMap } from './drawMap.js';
-//import Data from './Data.js';
 
 /**
  * TODO: Search at mobile devices is buggy
- * TODO: Search results only for Vienna / Vienna first
+ * TODO: location service at mobile device is broken
  * TODO: function getInfos (e) into own module
- * TODO: JSONP instead of CORS Domain
+ * JSONP instead of CORS Domain/impossible? tried, but WL server does not support JSONP
   */
 
-/**
- * Get Data
- */
-//export let data = new Data()
-
-/**
- * Fill Data
- */
-//data.initInputs()
-//getData.gtfsData(config.STOPS_GTFS_URL, 'stops')
-//getData.gtfsData(config.SHAPES_GTFS_URL, 'shapes')
-
-
-/**
- * draw Map
- */
 drawMap();

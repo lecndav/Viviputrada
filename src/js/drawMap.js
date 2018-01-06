@@ -3,37 +3,37 @@
  * @author Michael Dunkel <michael.dunkel@technikum-wien.at>
  */
 import * as config from './_config.js'
-import { parseLines, parseStops } from './jsonToGeoJson.js';
 import * as getData from './fetchData.js';
+import { parseLines, parseStops } from './jsonToGeoJson.js';
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from 'mapbox-gl-geocoder'
 import steige from '../assets/json/wienerlinien-ogd-steige.json'
 // import turf from '@turf/turf'
 
-/**
- * initialize map
- */
-mapboxgl.accessToken = config.MAPBOX_ACCESS_TOKEN;
-let map = new mapboxgl.Map({
-    container: config.MAPBOX_HTML_CONTAINER_ID,
-    style: config.MAPBOX_STYLE,
-    center: config.LNG_LAT_OF_VIENNA,
-    zoom: config.MAPBOX_ZOOM_LVL,
-    pitchWithRotate: config.MAPBOX_DRAG_PAN,
-    dragRotate: config.MAPBOX_DRAG_ROTATE,
-    bearingSnap: config.MAPBOX_BEARING_SNAP
-});
-
-let lines, stops;
+let lines, stops, showRoute;
 
 /**
  * DRAW MAP
  */
 export function drawMap() {
     stops = parseStops()
-    //console.log(lines)
+    lines = parseLines()
+
     /**
-     *
+     * INITIALIZE MAPBOX 'map'
+     */
+    mapboxgl.accessToken = config.MAPBOX_ACCESS_TOKEN;
+    let map = new mapboxgl.Map({
+        container: config.MAPBOX_HTML_CONTAINER_ID,
+        style: config.MAPBOX_STYLE,
+        center: config.LNG_LAT_OF_VIENNA,
+        zoom: config.MAPBOX_ZOOM_LVL,
+        pitchWithRotate: config.MAPBOX_DRAG_PAN,
+        dragRotate: config.MAPBOX_DRAG_ROTATE,
+        bearingSnap: config.MAPBOX_BEARING_SNAP
+    });
+    /**
+     * LOAD SOURCES AND DISPLAY LAYERS
      */
     map.on('load', function () {
         /**
@@ -51,11 +51,11 @@ export function drawMap() {
                 break;
             }
         }
-        /**
-         * ADD SOURCES
-         * stops (circle)
-         */
 
+        /**
+         * ADD SOURCE AND LAYER 'STOPS'
+         * stops (circles)
+         */
         map.addSource('stops', {
             'type': 'geojson',
             'data': stops
@@ -63,7 +63,6 @@ export function drawMap() {
             // 'clusterMaxZoom': 20, // Max zoom to cluster points on
             // 'clusterRadius': 5 // Radius of each cluster when clustering points (defaults to 50)
         })
-
         map.addLayer({
             'id': 'stops',
             'type': 'circle',
@@ -81,11 +80,48 @@ export function drawMap() {
                 }
             }
         }, firstSymbolId)
+
+        /**
+         * ADD SOURCE AND LAYER 'SHAPES' FOR A SPECIFIC LINE THAT WAS CLICKED
+         * show route of a specific line
+         * @param filteredLines
+         */
+        showRoute = (filteredLines) => {
+            if(map.getLayer('shapes')){
+                map.removeSource('shapes')
+                map.removeLayer('shapes')
+            }
+            map.addSource('shapes',{
+                'type': 'geojson',
+                'data': lines
+                //'data': filteredLines
+            })
+            map.addLayer({
+                'id': 'shapes',
+                'type': 'line',
+                'source': 'shapes',
+                'layout': {
+                    'line-join': 'round',
+                    'line-round-limit': 1,
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#e4493d',
+                    'line-width': {
+                        'base': 3.5,
+                        'stops': [[7, 0], [10, 2], [18, 40]]
+                    },
+                    'line-blur': {
+                        'base': 10,
+                        'stops':[[12, 5], [22, 15]]
+                    }
+                }
+            })
+        }
     })
 
     // When a click event occurs on a feature in the shapes, open a popup at the
     // location of the click, with description HTML from its properties.
-
     map.on('click', 'stops', function (e) {
         let div = window.document.createElement('div')
         div.setAttribute('id', 'popupWithRealtimeData')
@@ -94,6 +130,11 @@ export function drawMap() {
             .setLngLat(e.lngLat)
             .setDOMContent(div)
             .addTo(map);
+        popup.on('close', function(e) {
+            if(map.getLayer('shapes')){
+                map.setLayoutProperty('shapes', 'visibility', 'none');
+            }
+        })
         addEventListeners();
     });
 
@@ -126,7 +167,7 @@ export function drawMap() {
 }
 
 /**
- * FILTER INFOS
+ * FILTER INFOS FOR CLICKED 'stop' AND GET RBL NUMBERS FROM ALL ITS PLATFORMS
  * @param e
  * @returns {string}
  */
@@ -161,7 +202,8 @@ export function getInfos (e) {
     return `<h1>${stopName}</h1>`}
 
 /**
- * UPDATE POPUP
+ * UPDATE POPUP WITH REALTIME DATA
+ * gets called at fetch() resolve
  * @param data
  * @param stopName
  */
@@ -208,10 +250,14 @@ export function updatePopup(data, stopName){
     div.innerHTML = divContent
 }
 
+/**
+ * ADDS EVENTLISTENERS FOR EVERY 'a' ELEMENT
+ * calls function: filterDataForLine with parameter line
+ */
 export function addEventListeners(){
     document.querySelector('body').addEventListener('click', function(e) {
         if (e.target.tagName.toLowerCase() === 'a') {
-            getRoute(e.target.textContent)
+            filterDataForLine(e.target.textContent)
         }
     });
 }
@@ -221,67 +267,8 @@ export function addEventListeners(){
  * @param linienIDs
  * @returns {{linienIDs: *}}
  */
-export function getRoute(line){
+export function filterDataForLine(line){
     let filteredLines = line
-    drawRoute(filteredLines)
-}
-
-/**
- * DRAW ROUTE
- * @param name
- * @param data
- */
-export function drawRoute (filteredLines){
-    lines = parseLines()
-    console.log(lines)
-    map.on('load', function () {
-        console.log("huhu")
-        map.addSource('shapes',{
-            'type': 'geojson',
-            'data': lines
-            //'data': filteredLines
-        })
-
-        map.addLayer({
-            'id': 'shapes',
-            'type': 'line',
-            'source': 'shapes',
-            'layout': {
-                'line-join': 'round',
-                'line-round-limit': 1,
-                'line-cap': 'round'
-            },
-            'paint': {
-                'line-color': '#e4493d',
-                'line-width': {
-                    'base': 3.5,
-                    'stops': [[7, 0], [10, 2], [18, 40]]
-                },
-                'line-blur': {
-                    'base': 10,
-                    'stops':[[12, 5], [22, 15]]
-                }
-            }
-        })
-    })
-    // When a click event occurs on a feature in the shapes, open a popup at the
-    // location of the click, with description HTML from its properties.
-    /*
-    map.on('click', 'shapes', function (e) {
-        new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(e.features[0].properties.shape_id)
-            .addTo(map);
-    });
-
-    // Change the cursor to a pointer when the mouse is over the shapes.
-    map.on('mouseenter', 'shapes', function () {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-
-    // Change it back to a pointer when it leaves.
-    map.on('mouseleave', 'shapes', function () {
-        map.getCanvas().style.cursor = '';
-    });
-*/
+    //TODO: filter lines
+    showRoute(filteredLines)
 }
